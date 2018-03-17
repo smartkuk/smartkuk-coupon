@@ -3,7 +3,8 @@
 angular.module('app').controller('CouponCtrl', function($scope, $log, CouponService) {
 	
 	$scope.views = {
-			userEmail: null
+//			userEmail: null
+			userEmail: 'pipe0502@gmail.com'
 	};
 	
 	$scope.test = function () {

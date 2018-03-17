@@ -24,6 +24,7 @@ public class CouponServiceImpl implements CouponService {
       coupons.add(coupon);
     });
     log.info("coupons: {}", coupons);
+    log.debug("coupons: {}", coupons);
     return coupons;
   }
 
