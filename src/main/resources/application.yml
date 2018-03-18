@@ -1,0 +1,32 @@
+logging:
+  config: classpath:logback-config.xml
+  
+server:
+  port: ${PORT:9090}
+
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    password: ''
+    url: jdbc:h2:mem:smartkuk
+    username: sa
+
+  jackson:
+    default-property-inclusion: non-null
+    deserialization:
+      fail-on-unknown-properties: 'false'
+    parser:
+      allow-single-quotes: 'true'
+      allow-unquoted-field-names: 'true'
+    serialization:
+      fail-on-empty-beans: 'false'
+      write-dates-as-timestamps: 'false'
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        connection:
+          isolation: READ-COMMITTED
+        enable_lazy_load_no_trans: 'true'

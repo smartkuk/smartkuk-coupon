@@ -1,5 +1,6 @@
 package smartkuk.repository;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.time.Instant;
@@ -8,15 +9,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import lombok.extern.slf4j.Slf4j;
+import smartkuk.config.JpaConfiguration;
 import smartkuk.model.Coupon;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@SpringBootTest(classes = CouponRepository.class)
+@ContextConfiguration(classes = JpaConfiguration.class)
 @Slf4j
 public class CouponRepositoryTest {
 
@@ -34,10 +36,15 @@ public class CouponRepositoryTest {
   }
 
   @Test
-  public void findAllByEmailLikeTest() {
+  public void countByEmailTest() {
     Coupon entity = createEntity();
+    log.info("entity: {}", entity);
     Coupon savedEntity = couponRepository.save(entity);
-    log.info("They are same objects: ", entity.equals(savedEntity));
+    log.info("savedEntity: {}", savedEntity);
     assertTrue(entity.equals(savedEntity));
+    assertFalse(savedEntity.isNew());
+    assertTrue(couponRepository.countByEmail(entity.getEmail()).isPresent());
+    assertTrue(couponRepository.countByEmail(entity.getEmail()).get() > 0L);
+    assertFalse(couponRepository.countByEmail("").get() > 0L);
   }
 }
