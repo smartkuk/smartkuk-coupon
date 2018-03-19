@@ -127,6 +127,8 @@ public class CouponGenerator {
    */
   public static char[] autoSplitGenerate() {
 
+    log.info("autoSplitGenerate");
+
     int switchIndex = 0;
     int dividedNum = Thread.activeCount() / 2000;
     String str = String.valueOf(dividedNum);
@@ -145,6 +147,11 @@ public class CouponGenerator {
           switchList[i] = false;
         }
       }
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        log.warn("일시 중지 오류", e);
+      }
     }
 
     // 결과물 문자 배열(16자리)
@@ -154,6 +161,30 @@ public class CouponGenerator {
 
       // 문자 배열의 문자 결정
       int elementIndex = random.nextInt(BOUND_NUMBER);
+
+      // 순차적으로 랜덤 문자 할당
+      coupon[i] = ELEMENT_CHARACTERS[elementIndex];
+    }
+
+    return coupon;
+  }
+
+  /**
+   * 16자리 문자 배열을 생성하고 리턴
+   *
+   * @return SplittableRandom 클래스를 이용한 랜덤 문자 배열
+   */
+  public static char[] generatePerCall() {
+
+    // 결과물 문자 배열(16자리)
+    char[] coupon = new char[16];
+
+    SplittableRandom splittableRandom = new SplittableRandom();
+
+    for (int i = 0; i < coupon.length; i++) {
+
+      // 문자 배열의 문자 결정
+      int elementIndex = splittableRandom.nextInt(BOUND_NUMBER);
 
       // 순차적으로 랜덤 문자 할당
       coupon[i] = ELEMENT_CHARACTERS[elementIndex];

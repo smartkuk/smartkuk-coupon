@@ -36,6 +36,13 @@ public interface CouponService {
    */
   void autoSplitSaveCouponWithRetry(String email);
 
+  /**
+   * 스레드 갯수 기반 자동 split 처리 쿠폰 채번 로직과 쿠폰 정보 저장
+   *
+   * @param email 저장하고자 하는 이메일 문자열
+   */
+  void saveCouponWithRetry3(String email);
+
   String toDashStyle(char[] coupon);
 
 }

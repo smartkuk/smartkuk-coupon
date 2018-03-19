@@ -2,6 +2,7 @@ package smartkuk.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
@@ -59,10 +60,37 @@ public class RetryableCouponSaveTest extends JpaEnabledService {
   @Test
   public void parallelSaveCouponTestWithAutoSplit() {
 
-    int emailCount = 4000;
+    int emailCount = 10000;
     createRandomEmails(emailCount).parallelStream().forEach(email -> {
       couponService.autoSplitSaveCouponWithRetry(email);
     });
+  }
+
+  /**
+   * 병렬 저장 테스트3
+   */
+  @Test
+  public void parallelSaveCouponTest3() throws Throwable {
+
+//    int emailCount = 10000;
+//    int emailCount = 20000;
+//    int emailCount = 30000;
+
+    int emailCount = 100000;// 이메일 갯수
+    int threadCount = 50;// 스레드 갯수
+
+    ForkJoinPool smartkukPool = new ForkJoinPool(threadCount);
+    smartkukPool.submit(() -> {
+      createRandomEmails(emailCount).parallelStream().forEach(email -> {
+        couponService.saveCouponWithRetry3(email);
+        activeCount();
+      });
+    }).get();
+  }
+
+  private void activeCount() {
+    log.info("Executed current thread: {} / active thread count: {}",
+        Thread.currentThread().getName(), Thread.activeCount());
   }
 
   @After

@@ -7,8 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 import smartkuk.model.Coupon;
@@ -79,8 +77,6 @@ public class CouponServiceImpl implements CouponService {
   }
 
   @Override
-  @Retryable(maxAttempts = 20, backoff = @Backoff(delay = 1500), label = "Retryable saveCoupon3",
-      exclude = IllegalArgumentException.class)
   public void autoSplitSaveCouponWithRetry(String email) {
 
     log.info("사용자의 쿠폰을 발행후 저장 시작");
@@ -101,13 +97,41 @@ public class CouponServiceImpl implements CouponService {
     log.info("사용자의 쿠폰을 발행후 저장 종료");
   }
 
+  @Override
+  public void saveCouponWithRetry3(String email) {
+
+    log.info("사용자의 쿠폰을 발행후 저장 시작");
+
+    if (Strings.isNullOrEmpty(email)) {
+      throw new IllegalArgumentException("이메일 주소는 필수 입력값 입니다.");
+    }
+
+    if (exist(email)) {
+      throw new IllegalArgumentException("이메일(" + email + ") 주소는 발행한 내역이 있습니다.");
+    }
+
+    Coupon toSavedEntity = new Coupon();
+    toSavedEntity.setEmail(email);
+    saveRetry(toSavedEntity);
+
+    log.info("사용자의 쿠폰을 발행후 저장 종료");
+  }
+
+  @Retryable(maxAttempts = 20, backoff = @Backoff(delay = 1000), label = "Retryable saveCoupon2")
+  private void saveRetry(Coupon coupon) {
+    coupon.setCoupon(toDashStyle(CouponGenerator.generatePerCall()));
+    couponRepository.save(coupon);
+  }
+
   /**
    * 커넥션을 새롭게 생성하여 쿠폰을 저장
    *
    * @param coupon 쿠폰 모델
    * @return 저장된 모델
    */
-  @Transactional(propagation = Propagation.REQUIRES_NEW)
+//  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  @Retryable(maxAttempts = 20, backoff = @Backoff(delay = 1500), label = "Retryable saveCoupon3",
+      exclude = IllegalArgumentException.class)
   private Coupon saveCouponNewConnection(Coupon coupon) {
     log.info("saveCouponNewConnection 시작 {}", coupon.getId());
     return couponRepository.save(coupon);

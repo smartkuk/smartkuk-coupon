@@ -70,7 +70,7 @@ public class CouponController {
         throw new IllegalArgumentException("이메일 주소는 필수 입력값 입니다.");
       }
 
-      couponService.saveCouponWithRetry(user.getEmail());
+      couponService.saveCouponWithRetry3(user.getEmail());
       return ResponseEntity.ok().build();
     };
   }
