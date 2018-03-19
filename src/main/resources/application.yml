@@ -3,7 +3,7 @@ logging:
   
 server:
   port: ${PORT:9090}
-
+  
 spring:
   datasource:
     driverClassName: org.h2.Driver

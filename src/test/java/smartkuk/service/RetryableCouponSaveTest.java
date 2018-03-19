@@ -45,26 +45,26 @@ public class RetryableCouponSaveTest extends JpaEnabledService {
    * 0899,1000,1000,0904,0106,0651,0743,0994,0109,0091
    * 1000,1000,1000,1000,1000,1000,1000,1000,1000,1000
    */
-  @Test
-  public void parallelSaveCouponTest() {
-
-    int emailCount = 2000;
-    createRandomEmails(emailCount).parallelStream().forEach(email -> {
-      couponService.nonSplitSaveCouponWithRetry(email);
-    });
-  }
+//  @Test
+//  public void parallelSaveCouponTest() {
+//
+//    int emailCount = 2000;
+//    createRandomEmails(emailCount).parallelStream().forEach(email -> {
+//      couponService.nonSplitSaveCouponWithRetry(email);
+//    });
+//  }
 
   /**
    * 병렬 저장 테스트2
    */
-  @Test
-  public void parallelSaveCouponTestWithAutoSplit() {
-
-    int emailCount = 10000;
-    createRandomEmails(emailCount).parallelStream().forEach(email -> {
-      couponService.autoSplitSaveCouponWithRetry(email);
-    });
-  }
+//  @Test
+//  public void parallelSaveCouponTestWithAutoSplit() {
+//
+//    int emailCount = 10000;
+//    createRandomEmails(emailCount).parallelStream().forEach(email -> {
+//      couponService.autoSplitSaveCouponWithRetry(email);
+//    });
+//  }
 
   /**
    * 병렬 저장 테스트3
@@ -75,8 +75,9 @@ public class RetryableCouponSaveTest extends JpaEnabledService {
 //    int emailCount = 10000;
 //    int emailCount = 20000;
 //    int emailCount = 30000;
+//    int emailCount = 100000;// 이메일 갯수
 
-    int emailCount = 100000;// 이메일 갯수
+    int emailCount = 10;// 이메일 갯수
     int threadCount = 50;// 스레드 갯수
 
     ForkJoinPool smartkukPool = new ForkJoinPool(threadCount);

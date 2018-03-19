@@ -48,6 +48,9 @@
 								<td>{{coupon.coupon }}</td>
 								<td>{{coupon.createdAt | date : "yyyy-MM-dd HH:mm:ss" }}</td>
 							</tr>
+							<tr ng-show="!results.length" >
+								<td colspan="4" align="center" >조회 결과가 없습니다. 쿠폰발행 또는 20개 더미 생성을 시도해보세요.<span ng-show="current != null" > (마지막 조회 : {{current | date : "yyyy-MM-dd HH:mm:ss" }})</span></td>
+							</tr>
 						</tbody>
 					</table>
 					

@@ -1,0 +1,27 @@
+<!doctype html>
+<html ng-app="app" >
+<head>
+<meta charset="UTF-8" >
+<meta name="viewport" content="width=device-width, initial-scale=1" >
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<title>SmartFactory</title>
+</head>
+<body onLoad="setTimeout('home();', 3000);" >
+	<div class="container-fluid" align="center" >
+		<h2>오류 발생</h2>
+		<h4>잘못된 주소를 입력하셨습니다(3초 후에 자동으로 이동합니다)</h4>
+		<a href="/" >지금 페이지 이동하기</a>
+	</div>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" ></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js" ></script>
+
+<script type="text/javascript" >
+	function home() {
+		location = "/";
+	}
+</script>
+
+</html>

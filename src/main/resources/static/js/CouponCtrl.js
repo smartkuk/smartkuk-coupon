@@ -3,12 +3,17 @@
 angular.module('app').controller('CouponCtrl', function($scope, $window, $log, CouponService) {
 	
 	/**
+	 * 현재시간
+	 */
+	$scope.current = new Date();
+	
+	/**
 	 * 화면 사용 변수
 	 */
 	$scope.views = {
 			
 			//이메일 입력값
-			userEmail: 'pipe0502@gmail.com',
+			userEmail: null,
 			
 			//페이징 처리를 위해 페이지 조건 객체
 			pageCondition: {
@@ -115,6 +120,7 @@ angular.module('app').controller('CouponCtrl', function($scope, $window, $log, C
 		
 		//쿠폰 발급
 		CouponService.saveCouponWithRetry(email).then(function success(response) {
+			$window.alert('[', email, '] 쿠폰번호가 발급 되었습니다.');
 			//처리후 재 조회
 			$scope.pagedCoupons(0);
 		}, function error(error) {

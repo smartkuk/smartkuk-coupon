@@ -2,6 +2,7 @@ package smartkuk.api;
 
 import java.util.concurrent.Callable;
 
+import org.assertj.core.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,9 @@ import smartkuk.service.CouponService;
 @Slf4j
 public class CouponController {
 
+  /**
+   * 쿠폰 발급 요청시 사용되는 데이터 구조 클래스
+   */
   @Data
   public static class User {
     private String email;
@@ -66,7 +70,7 @@ public class CouponController {
 
     return () -> {
 
-      if (user == null || user.getEmail() == null || "".equals(user.getEmail())) {
+      if (user == null || Strings.isNullOrEmpty(user.getEmail())) {
         throw new IllegalArgumentException("이메일 주소는 필수 입력값 입니다.");
       }
 
