@@ -5,7 +5,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
@@ -45,7 +44,7 @@ public class CouponServiceTest {
   private Coupon createEntity() {
     Coupon coupon = new Coupon();
     coupon.setEmail(RandomStringUtils.random(3) + "@" + RandomStringUtils.random(3));
-    coupon.setCoupon(couponService.toDashStyle(CouponGenerator.generate()));
+    coupon.setCoupon(couponService.toDashStyle(CouponGenerator.generatePerCall()));
     return coupon;
   }
 
@@ -67,30 +66,4 @@ public class CouponServiceTest {
     log.info("results: {} {}", results, results.getContent());
     assertTrue(results.hasContent());
   }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void saveCouponWithRetryErrorTest() {
-    couponService.saveCouponWithRetry("");
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void saveCouponWithRetryErrorTest2() {
-    when(couponRepository.countByEmail("smartkuk@gmail.com")).thenReturn(Optional.of(1L));
-    couponService.saveCouponWithRetry("smartkuk@gmail.com");
-  }
-
-  @Test
-  public void saveCouponWithRetryTest() {
-    when(couponRepository.countByEmail("smartkuk@gmail.com")).thenReturn(Optional.of(0L));
-    couponService.saveCouponWithRetry("smartkuk@gmail.com");
-  }
-
-  @Test
-  public void toDashStyleTest() {
-    String dashString = couponService.toDashStyle(CouponGenerator.generate());
-    assertTrue(dashString.indexOf("-") > 0);
-    char[] chars = dashString.toCharArray();
-    assertTrue(chars[4] == '-' && chars[9] == '-' && chars[14] == '-');
-  }
-
 }

@@ -4,9 +4,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.junit.Test;
 import org.springframework.util.StopWatch;
@@ -24,9 +26,12 @@ public class CouponGeneratorTest {
 
     // 생성 데이터 백만개
     int requestCount = 1000000;
+    List<char[]> results = new ArrayList<>();
 
     watch.start(taskName);
-    List<char[]> results = CouponGenerator.generate(requestCount);
+    IntStream.range(0, requestCount).forEach((val) -> {
+      results.add(CouponGenerator.generatePerCall());
+    });
     watch.stop();
 
     log.info(watch.prettyPrint());
@@ -40,6 +45,5 @@ public class CouponGeneratorTest {
     }).collect(Collectors.toCollection(HashSet::new));
 
     assertTrue(requestCount == mergedSet.size());
-
   }
 }

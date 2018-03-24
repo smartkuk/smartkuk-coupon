@@ -46,7 +46,7 @@ public class CouponServiceImpl implements CouponService {
   }
 
   @Override
-  public void saveCouponWithRetry3(String email) {
+  public void saveCoupon(String email) {
 
     log.info("사용자의 쿠폰을 발행후 저장 시작");
 
@@ -72,7 +72,7 @@ public class CouponServiceImpl implements CouponService {
    *
    * @param coupon 쿠폰 모델 객체
    */
-  @Retryable(maxAttempts = 20, backoff = @Backoff(delay = 1000), label = "Retryable saveCoupon2",
+  @Retryable(maxAttempts = 20, backoff = @Backoff(delay = 1000), label = "Retryable coupon persist",
       exclude = { FailedGenerationException.class })
   private void saveRetry(Coupon coupon) {
     log.info("saveRetry 시작");
@@ -125,90 +125,5 @@ public class CouponServiceImpl implements CouponService {
     log.debug("변환된 쿠폰: {}", prettyCoupon);
 
     return prettyCoupon;
-  }
-
-  @Override
-  @Deprecated
-  @Retryable(maxAttempts = 20, backoff = @Backoff(delay = 1000), label = "Retryable saveCoupon",
-      exclude = IllegalArgumentException.class)
-  public void saveCouponWithRetry(String email) {
-
-    log.info("사용자의 쿠폰을 발행후 저장 시작");
-
-    if (Strings.isNullOrEmpty(email)) {
-      throw new IllegalArgumentException("이메일 주소는 필수 입력값 입니다.");
-    }
-
-    if (exist(email)) {
-      throw new IllegalArgumentException("이메일(" + email + ") 주소는 발행한 내역이 있습니다.");
-    }
-
-    Coupon toSavedEntity = new Coupon();
-    toSavedEntity.setEmail(email);
-    toSavedEntity.setCoupon(toDashStyle(CouponGenerator.generate()));
-    saveCouponNewConnection(toSavedEntity);
-
-    log.info("사용자의 쿠폰을 발행후 저장 종료");
-  }
-
-  @Override
-  @Deprecated
-  @Retryable(maxAttempts = 20, backoff = @Backoff(delay = 1000), label = "Retryable saveCoupon2",
-      exclude = IllegalArgumentException.class)
-  public void nonSplitSaveCouponWithRetry(String email) {
-
-    log.info("사용자의 쿠폰을 발행후 저장 시작");
-
-    if (Strings.isNullOrEmpty(email)) {
-      throw new IllegalArgumentException("이메일 주소는 필수 입력값 입니다.");
-    }
-
-    if (exist(email)) {
-      throw new IllegalArgumentException("이메일(" + email + ") 주소는 발행한 내역이 있습니다.");
-    }
-
-    Coupon toSavedEntity = new Coupon();
-    toSavedEntity.setEmail(email);
-    toSavedEntity.setCoupon(toDashStyle(CouponGenerator.generate(true)));
-    saveCouponNewConnection(toSavedEntity);
-
-    log.info("사용자의 쿠폰을 발행후 저장 종료");
-  }
-
-  @Override
-  @Deprecated
-  public void autoSplitSaveCouponWithRetry(String email) {
-
-    log.info("사용자의 쿠폰을 발행후 저장 시작");
-
-    if (Strings.isNullOrEmpty(email)) {
-      throw new IllegalArgumentException("이메일 주소는 필수 입력값 입니다.");
-    }
-
-    if (exist(email)) {
-      throw new IllegalArgumentException("이메일(" + email + ") 주소는 발행한 내역이 있습니다.");
-    }
-
-    Coupon toSavedEntity = new Coupon();
-    toSavedEntity.setEmail(email);
-    toSavedEntity.setCoupon(toDashStyle(CouponGenerator.autoSplitGenerate()));
-    saveCouponNewConnection(toSavedEntity);
-
-    log.info("사용자의 쿠폰을 발행후 저장 종료");
-  }
-
-  /**
-   * 커넥션을 새롭게 생성하여 쿠폰을 저장
-   *
-   * @param coupon 쿠폰 모델
-   * @return 저장된 모델
-   */
-//  @Transactional(propagation = Propagation.REQUIRES_NEW)
-  @Deprecated
-  @Retryable(maxAttempts = 20, backoff = @Backoff(delay = 1500), label = "Retryable saveCoupon3",
-      exclude = IllegalArgumentException.class)
-  private Coupon saveCouponNewConnection(Coupon coupon) {
-    log.info("saveCouponNewConnection 시작 {}", coupon.getId());
-    return couponRepository.save(coupon);
   }
 }

@@ -24,7 +24,7 @@ public interface CouponService {
    *
    * @param email 저장하고자 하는 이메일 문자열
    */
-  void saveCouponWithRetry3(String email);
+  void saveCoupon(String email);
 
   /**
    * 문자 배열을 대쉬가 포함된 쿠폰번호 문자열로 변환
@@ -33,25 +33,4 @@ public interface CouponService {
    * @return aaaa-1234-1111-djdj-3333 형태의 문자열
    */
   String toDashStyle(char[] coupon);
-
-  /**
-   * 이메일을 사용하여 쿠폰 정보를 저장
-   *
-   * @param email 저장하고자 하는 이메일 문자열
-   */
-  void saveCouponWithRetry(String email);
-
-  /**
-   * split 처리하지 않는 쿠폰 채번 로직과 쿠폰 정보 저장
-   *
-   * @param email 저장하고자 하는 이메일 문자열
-   */
-  void nonSplitSaveCouponWithRetry(String email);
-
-  /**
-   * 스레드 갯수 기반 자동 split 처리 쿠폰 채번 로직과 쿠폰 정보 저장
-   *
-   * @param email 저장하고자 하는 이메일 문자열
-   */
-  void autoSplitSaveCouponWithRetry(String email);
 }
